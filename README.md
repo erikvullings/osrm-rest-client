@@ -13,6 +13,10 @@ version and those others are:
 - Profile can be specified per call, i.e. the others only supported the `driving` profile.
 - It is bundled using [microbundle](https://npm.im/microbundle), so you can pick your flavour: ESM, UMD, etc.
 
+## Playground
+
+Please visit the [online playground](https://repl.it/repls/DarkvioletAdoredMicrobsd#index.ts) to give it a go.
+
 ## Installation
 
 For debugging, run:
@@ -33,10 +37,10 @@ npm run build
 ### TypeScript async examples
 
 ```ts
-import { OSRM, IOsrmWaypoint } from './osrm-rest-client';
+import { OSRM, IOsrmWaypoint } from 'osrm-rest-client';
 
 // Examples using async
-const osrm = new OSRM(); // Using online OSRM service at https://router.project-osrm.org
+const osrm = OSRM(); // Using online OSRM service at https://router.project-osrm.org
 // Alternatively, supply your own `new OSRM('https://router.project-osrm.org')`
 // Default search profile is `driving`, but you can override this.
 
@@ -101,7 +105,7 @@ In modern JavaScript versions, you can also use the async version provided above
 ```js
 var OSRM = require('osrm-rest-client');
 
-var osrm = new OSRM(); // Using online OSRM service at https://router.project-osrm.org
+var osrm = OSRM(); // Using online OSRM service at https://router.project-osrm.org
 // Alternatively, supply your own `new OSRM('https://router.project-osrm.org')`
 // Default search profile is `driving`, but you can override this.
 
