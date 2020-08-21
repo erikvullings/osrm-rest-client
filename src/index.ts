@@ -1,5 +1,4 @@
-import http from 'http';
-import https from 'https';
+import superagent from 'superagent';
 
 export type OsrmService = 'route' | 'nearest' | 'table' | 'match' | 'trip' | 'tile';
 
@@ -649,8 +648,11 @@ export const OSRM = (
     throw new Error(`Unsupported protocol: ${protocol}`);
   }
 
-  const get = (url: string, callback: (result: any) => void) =>
-    protocol === 'http:' ? http.get(url, callback) : https.get(url, callback);
+  // const get2 = (url: string, callback: (result: any) => void) =>
+  //   protocol === 'http:' ? http.get(url, callback) : https.get(url, callback);
+
+  // const get = (url: string, callback: (result: any) => void) =>
+  //   protocol === 'http:' ? superagent.get(url, callback);
 
   /** Remove certain options */
   const filterOptions = (options: IOsrmOptions, keys: Array<keyof IOsrmOptions>) => {
@@ -706,25 +708,18 @@ export const OSRM = (
   const request = (arg: string | Partial<IUrlOptions>, callback: (err: Error | null, result?: any) => void) => {
     const url = typeof arg === 'string' ? osrm + arg : encodeUrl(arg);
 
-    const to = setTimeout(() => {
-      callback(new Error('Request timed out'));
-    }, timeout);
-
-    get(url, (response) => {
-      let body = '';
-      response.on('data', (data: string) => {
-        body += data;
-      });
-      response.on('end', () => {
-        clearTimeout(to);
-        const format = response.headers['content-type'].split(';')[0];
+    superagent
+      .get(url)
+      .timeout(10000)
+      .then((response) => {
+        const format = response.header['content-type'].split(';')[0];
         if (format === 'application/json') {
-          callback(null, JSON.parse(body));
+          callback(null, JSON.parse(response.text));
         } else {
-          callback(null, body); // unknown, pass through
+          callback(null, response.body); // unknown, pass through
         }
-      });
-    }).on('error', (err) => callback(err));
+      })
+      .catch((err) => callback(err));
   };
 
   function nearest(options: INearestOptions, callback: (err: Error | null, result?: IOsrmNearestResult) => void): void;

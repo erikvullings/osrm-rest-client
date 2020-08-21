@@ -1,4 +1,4 @@
-import { OSRM, IOsrmRoute, IOsrmRouteLeg, IOsrmWaypoint } from './osrm-rest-client';
+import { OSRM, IOsrmRoute, IOsrmRouteLeg, IOsrmWaypoint } from '.';
 import test from 'ava';
 
 test.cb('test nearest service', (t) => {

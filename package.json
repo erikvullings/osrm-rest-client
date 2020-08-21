@@ -2,11 +2,17 @@
   "name": "osrm-rest-client",
   "version": "0.1.0",
   "description": "REST client for OSRM v5, the Open Street Map routing service. Supports async, promises or regular callbacks.",
-  "main": "dist/run.js",
+  "source": "src/index.ts",
+  "main": "dist/index.js",
+  "umd:main": "dist/index.umd.js",
+  "unpkg": "dist/index.umd.js",
+  "browser": "dist/index.umd.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "ava --watch",
     "clean": "rimraf ./dist",
-    "build": "microbundle",
+    "build": "npm run clean && microbundle",
     "dev": "microbundle watch",
     "dry-run": "npm publish --dry-run",
     "patch-release": "npm run clean && npm run build && npm version patch --force -m \"Patch release\" && npm publish && git push --follow-tags",
@@ -24,8 +30,12 @@
     "url": "https://github.com/erikvullings/agent-smith/issues"
   },
   "homepage": "https://github.com/erikvullings/agent-smith#readme",
+  "dependencies": {
+    "superagent": "^6.0.0"
+  },
   "devDependencies": {
     "@types/node": "^14.0.27",
+    "@types/superagent": "^4.1.9",
     "ava": "^3.11.1",
     "esm": "^3.2.25",
     "rimraf": "^3.0.2",
