@@ -1,6 +1,37 @@
 import { OSRM, IOsrmRoute, IOsrmRouteLeg, IOsrmWaypoint } from './osrm-rest-client';
 import test from 'ava';
 
+test.cb('test nearest service', (t) => {
+  const osrm = OSRM();
+  osrm.nearest(
+    {
+      coordinates: [[4.32734, 52.109428]],
+      number: 3,
+    },
+    (err, result) => {
+      if (err) {
+        t.fail(err.message);
+      } else {
+        const waypoints = result?.waypoints || ({} as IOsrmWaypoint[]);
+        t.assert(waypoints);
+        t.is(waypoints.length, 3);
+      }
+      t.end(err);
+    }
+  );
+});
+
+test('test async nearest service', async (t) => {
+  const osrm = OSRM();
+  const result = await osrm.nearest({
+    coordinates: [[4.32734, 52.109428]],
+    number: 3,
+  });
+  const waypoints = result?.waypoints || ({} as IOsrmWaypoint[]);
+  t.assert(waypoints);
+  t.is(waypoints.length, 3);
+});
+
 test.cb('test route service', (t) => {
   const osrm = OSRM();
   osrm.route(
@@ -228,37 +259,4 @@ test('test async tile service using promise', (t) => {
     .catch((err) => {
       t.fail(err);
     });
-});
-
-test.cb('test nearest service', (t) => {
-  const osrm = OSRM();
-  osrm.nearest(
-    {
-      coordinates: [[4.32734, 52.109428]],
-      number: 3,
-    },
-    (err, result) => {
-      if (err) {
-        t.fail(err.message);
-      } else {
-        const waypoints = result?.waypoints || ({} as IOsrmWaypoint[]);
-        console.log(JSON.stringify(waypoints, null, 2));
-        t.assert(waypoints);
-        t.is(waypoints.length, 3);
-      }
-      t.end(err);
-    }
-  );
-});
-
-test('test async nearest service', async (t) => {
-  const osrm = OSRM();
-  const result = await osrm.nearest({
-    coordinates: [[4.32734, 52.109428]],
-    number: 3,
-  });
-  const waypoints = result?.waypoints || ({} as IOsrmWaypoint[]);
-  console.log(JSON.stringify(waypoints, null, 2));
-  t.assert(waypoints);
-  t.is(waypoints.length, 3);
 });

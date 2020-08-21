@@ -1,7 +1,5 @@
 import http from 'http';
 import https from 'https';
-import qs from 'querystring';
-import url from 'url';
 
 export type OsrmService = 'route' | 'nearest' | 'table' | 'match' | 'trip' | 'tile';
 
@@ -646,7 +644,7 @@ export const OSRM = (
 ) => {
   const { osrm = 'https://router.project-osrm.org', defaultProfile = 'driving', timeout = 10000 } = arg;
 
-  const protocol = url.parse(osrm).protocol;
+  const protocol = osrm.substr(0, osrm.indexOf('//'));
   if (protocol !== 'http:' && protocol !== 'https:') {
     throw new Error(`Unsupported protocol: ${protocol}`);
   }
@@ -669,17 +667,17 @@ export const OSRM = (
   /** Convert the coordinates to a string */
   const stringifyCoordinates = (lonLats: Coordinate[]) => lonLats.map((c) => `${c[0]},${c[1]}`).join(';');
 
-  const stringifyOptionsArray = (array: Array<any>) => array.map((value) => (value === null && '') || value).join(';');
-
-  const stringifyOptions = (options = {} as IUrlOptions) => {
-    // we use a different array encoding than the very wasteful QS encoding
-    for (const key in options) {
-      if (Array.isArray(options[key as keyof IUrlOptions])) {
-        options[key as keyof IUrlOptions] = stringifyOptionsArray(options[key as keyof IUrlOptions]);
-      }
-    }
-    return qs.stringify(options as { [key: string]: any });
-  };
+  const stringifyOptions = (obj: { [key: string]: any } = {}) =>
+    Object.keys(obj)
+      .filter((key) => typeof obj[key] !== 'undefined' && obj[key] !== '' && obj[key] !== null)
+      .reduce((acc, key) => {
+        const k = encodeURIComponent(key);
+        const v = obj[key];
+        const val = v instanceof Array ? v.map((value) => (value === null && '') || value).join(';') : v;
+        acc.push(`${k}=${encodeURIComponent(val)}`);
+        return acc;
+      }, [] as string[])
+      .join('&');
 
   const queryOptions = (options: ITripOptions | IMatchOptions | IRouteOptions | ITableOptions, expectedLength = 2) => {
     if (!options.coordinates) {
