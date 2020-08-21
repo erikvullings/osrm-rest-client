@@ -21,15 +21,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/erikvullings/agent-smith.git"
+    "url": "git+https://github.com/erikvullings/osrm-rest-client.git"
   },
   "keywords": [],
   "author": "Erik Vullings <erik.vullings@gmail.com> (http://www.tno.nl)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/erikvullings/agent-smith/issues"
+    "url": "https://github.com/erikvullings/osrm-rest-client/issues"
   },
-  "homepage": "https://github.com/erikvullings/agent-smith#readme",
+  "homepage": "https://github.com/erikvullings/osrm-rest-client#readme",
   "dependencies": {
     "superagent": "^6.0.0"
   },
