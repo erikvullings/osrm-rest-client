@@ -631,6 +631,62 @@ export interface IOsrmTripResult extends IOsrmResult {
   trips: IOsrmRoute[];
 }
 
+export interface IOsrm {
+  /** Snaps a coordinate to the street network and returns the nearest n matches. */
+  nearest: {
+    (options: INearestOptions, callback: (err: Error | null, result?: IOsrmNearestResult | undefined) => void): void;
+    (options: INearestOptions): Promise<IOsrmNearestResult>;
+  };
+  /** Finds the fastest route between coordinates in the supplied order. */
+  route: {
+    (options: IRouteOptions, callback: (err: Error | null, result?: IOsrmRouteResult | undefined) => void): void;
+    (options: IRouteOptions): Promise<IOsrmRouteResult>;
+  };
+  /**
+   * Map matching matches/snaps given GPS points to the road network in the most plausible way.
+   * Please note the request might result multiple sub-traces. Large jumps in the timestamps
+   * (> 60s) or improbable transitions lead to trace splits if a complete matching could not
+   * be found. The algorithm might not be able to match all points.
+   * Outliers are removed if they can not be matched successfully.
+   */
+  match: {
+    (options: IMatchOptions, callback: (err: Error | null, result?: IOsrmMatchResult | undefined) => void): void;
+    (options: IMatchOptions): Promise<IOsrmMatchResult>;
+  };
+  /**
+   * The trip plugin solves the Traveling Salesman Problem using a greedy heuristic
+   * (farthest-insertion algorithm) for 10 or more waypoints and uses brute force
+   * for less than 10 waypoints. The returned path does not have to be the fastest path.
+   * As TSP is NP-hard it only returns an approximation.
+   * Note that all input coordinates have to be connected for the trip service to work.
+   */
+  trip: {
+    (options: ITripOptions, callback: (err: Error | null, result?: IOsrmTripResult | undefined) => void): void;
+    (options: ITripOptions): Promise<IOsrmTripResult>;
+  };
+  /**
+   * Computes the duration of the fastest route between all pairs of supplied coordinates.
+   * Returns the durations or distances or both between the coordinate pairs. Note that
+   * the distances are not the shortest distance between two coordinates, but rather the
+   * distances of the fastest routes. Duration is in seconds and distances is in meters.
+   */
+  table: {
+    (options: ITableOptions, callback: (err: Error | null, result?: IOsrmTableResult | undefined) => void): void;
+    (options: ITableOptions): Promise<IOsrmTableResult>;
+  };
+  /**
+   * This service generates Mapbox Vector Tiles that can be viewed with a vector-tile capable
+   * slippy-map viewer. The tiles contain road geometries and metadata that can be used to
+   * examine the routing graph. The tiles are generated directly from the data in-memory,
+   * so are in sync with actual routing results, and let you examine which roads are actually routable,
+   * and what weights they have applied.
+   */
+  tile: {
+    (xyz: number[], callback: (err: Error | null, result?: Buffer | undefined) => void): void;
+    (xyz: number[]): Promise<Buffer>;
+  };
+}
+
 export const OSRM = (
   arg: {
     /** OSRM server URL */
@@ -910,5 +966,5 @@ export const OSRM = (
      * and what weights they have applied.
      */
     tile,
-  };
+  } as IOsrm;
 };
