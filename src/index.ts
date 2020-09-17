@@ -247,9 +247,9 @@ export interface IOsrmOptions {
    */
   generate_hints?: boolean;
   /** Keep waypoints on curb side. One entry per location or empty. */
-  approaches: Approach[];
+  approaches?: Approach[];
   /** Additive list of classes to avoid, order does not matter. Class names are determined by the profile or 'none'. */
-  classes: string[];
+  classes?: string[];
 }
 
 export interface IMatchOptions extends IOsrmOptions {
