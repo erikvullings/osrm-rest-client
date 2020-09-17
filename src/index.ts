@@ -137,6 +137,7 @@ export interface INearestOptions extends IOsrmOptions {
   skip_waypoints?: boolean;
 }
 
+/** Specific route options. */
 export interface IRouteOptions extends IOsrmOptions {
   /**
    * Search for alternative routes.
