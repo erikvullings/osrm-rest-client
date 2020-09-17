@@ -78,7 +78,10 @@ export type Coordinate = [number, number];
 export type Polyline = string;
 export type Bearing = number[];
 export type Radius = number;
+/** Base64 string */
 export type Hint = string;
+/** Keep waypoints on curb side, @default unrestricted */
+export type Approach = 'curb' | 'unrestricted';
 export type Duration = number;
 export type Tile = [number, number, number];
 export interface ILineString {
@@ -216,27 +219,36 @@ export interface ITableOptions extends IOsrmOptions {
   scale_factor?: number;
 }
 
+/**
+ * General options for all requests
+ * @see http://project-osrm.org/docs/v5.22.0/api/#general-options
+ */
 export interface IOsrmOptions {
   /**
    * The coordinates this request will use. Array with [{lon},{lat}] values, in decimal degrees.
    */
   coordinates?: Coordinate[];
   /**
-   * Limits the search to segments with given bearing in degrees towards true north in clockwise direction. Null or array with [{value},{range}]
+   * Limits the search to segments with given bearing in degrees towards true north in clockwise direction.
+   * Null or array with [{value},{range}]. One entry per location or empty.
    */
   bearings?: Bearing[] | null;
   /**
-   * Limits the search to given radius in meters. null or double >= 0 or unlimited (default)
+   * Limits the search to given radius in meters. null or double >= 0 or unlimited (default). One entry per location or empty.
    */
   radiuses?: Radius[] | null;
   /**
-   * Hint to derive position in street network. Base64 string
+   * Hint to derive position in street network. One entry per location or empty. Base64 string.
    */
   hints?: Hint[];
   /**
    * Adds a Hint to the response which can be used in subsequent requests, see hints parameter.
    */
   generate_hints?: boolean;
+  /** Keep waypoints on curb side. One entry per location or empty. */
+  approaches: Approach[];
+  /** Additive list of classes to avoid, order does not matter. Class names are determined by the profile or 'none'. */
+  classes: string[];
 }
 
 export interface IMatchOptions extends IOsrmOptions {
