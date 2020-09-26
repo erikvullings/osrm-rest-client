@@ -1,6 +1,6 @@
 {
   "name": "osrm-rest-client",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "REST client for OSRM v5, the Open Street Map routing service. Supports async, promises or regular callbacks.",
   "source": "src/index.ts",
   "main": "dist/index.js",
