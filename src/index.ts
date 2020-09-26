@@ -560,7 +560,7 @@ export interface IOsrmRouteLeg {
    * - true: An Annotation object containing node ids, durations, distances and weights.
    * - false: undefined
    */
-  annotations?: IOsrmAnnotation;
+  annotation?: IOsrmAnnotation;
 }
 
 export interface IOsrmRoute {
